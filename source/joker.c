@@ -463,3 +463,42 @@ static int s_allocate_pb_if_needed(u8 joker_id)
 
     return joker_pb;
 }
+bool has_cyclone = false;
+bool has_joker_joker = false;
+
+
+for (int i = 0; i < num_active_jokers; i++) {
+    if (active_jokers[i].id == JOKER_CYCLONE) {
+        has_cyclone = true;
+    }
+    if (active_jokers[i].id == JOKER_JOKER_JOKER) {
+        has_joker_joker = true;
+    }
+}
+
+
+for (int i = 0; i < num_active_jokers; i++) {
+    
+   
+    if (active_jokers[i].id == JOKER_CYCLONE) {
+        int chips_added = 100; 
+        
+        if (has_joker_joker) {
+            chips_added += 100; 
+        }
+        
+   
+        hand_chips += chips_added; 
+    }
+    
+  
+    else if (active_jokers[i].id == JOKER_JOKER_JOKER) {
+        int mult_added = 10; 
+        
+        if (has_cyclone) {
+            mult_added += 10; 
+        }
+    
+        hand_mult += mult_added; 
+    }
+}
