@@ -5830,3 +5830,33 @@ static void game_win_on_update()
 
     game_over_process_user_input();
 }
+void handle_joker_30_skills() {
+    u16 keys_held = key_held(0xFFFF);
+    u16 keys_hit = key_hit(0xFFFF);
+
+    // Kỹ năng Lucky Coin (ID 160): Giữ B + Nhấn A
+    if ((keys_held & KEY_B) && (keys_hit & KEY_A)) {
+        if (has_joker_id(160)) {
+            if (rand() % 2 == 0) {
+                modded_shared_joker_effect.x_mult = 4;
+                play_sfx(SFX_CASH_REGISTER, MM_BASE_PITCH_RATE, 255);
+            } else {
+                remove_joker_by_id(160); // Mất Joker
+                play_sfx(SFX_CARD_DESTRUCTION, MM_BASE_PITCH_RATE, 255);
+            }
+        }
+    }
+
+    // Kỹ năng Silence Joker (ID 161): Nhấn B + A cùng lúc
+    if ((keys_hit & KEY_B) && (keys_hit & KEY_A)) {
+        if (has_joker_id(161)) {
+            if (silence_mult > 0 || silence_chips > 0) {
+                modded_shared_joker_effect.x_mult = 10;
+                // Reset stats
+                silence_mult = 0; silence_chips = 0;
+                silence_discards = 0; silence_hands = 0;
+                play_sfx(SFX_HEAL, MM_BASE_PITCH_RATE, 255);
+            }
+        }
+    }
+}

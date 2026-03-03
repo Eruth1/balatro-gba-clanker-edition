@@ -47,4 +47,18 @@ bool get_modded_joker_gfx(int joker_id,
     }
     
     return false;
-}
+}// 1. Thêm include (Grit sẽ tự tạo file .h sau khi bạn bỏ ảnh vào thư mục graphics)
+#include "custom_joker_sheet_30.h"
+
+// 2. Thêm vào mảng modded_joker_tiles và modded_joker_pals
+static const unsigned int* modded_joker_tiles[] = { 
+    // ... từ 0 đến 29 đã có ...
+    custom_joker_sheet_29Tiles,
+    custom_joker_sheet_30Tiles  // Thêm mới ở đây
+};
+
+static const unsigned short* modded_joker_pals[] = { 
+    // ... từ 0 đến 29 đã có ...
+    custom_joker_sheet_29Pal,
+    custom_joker_sheet_30Pal    // Thêm mới ở đây
+};
