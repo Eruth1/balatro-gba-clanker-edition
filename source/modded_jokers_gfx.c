@@ -47,18 +47,35 @@ bool get_modded_joker_gfx(int joker_id,
     }
     
     return false;
-}// 1. Thêm include (Grit sẽ tự tạo file .h sau khi bạn bỏ ảnh vào thư mục graphics)
-#include "custom_joker_sheet_30.h"
+// 1. Include header mới khớp với tên file ảnh của bạn
+#include "joker_gfx30.h" 
 
-// 2. Thêm vào mảng modded_joker_tiles và modded_joker_pals
+// ... (các include sheet 0-29 cũ nếu có) ...
+
+#define MODDED_JOKER_START_ID 100
+#define NUM_JOKERS_PER_SPRITESHEET 2
+
+// 2. Thêm vào mảng dữ liệu
 static const unsigned int* modded_joker_tiles[] = { 
-    // ... từ 0 đến 29 đã có ...
-    custom_joker_sheet_29Tiles,
-    custom_joker_sheet_30Tiles  // Thêm mới ở đây
+    // ... (các sheetTiles từ 0 đến 29) ...
+    joker_gfx30Tiles  // Tên biến tự động sinh ra từ joker_gfx30.png
 };
 
 static const unsigned short* modded_joker_pals[] = { 
-    // ... từ 0 đến 29 đã có ...
-    custom_joker_sheet_29Pal,
-    custom_joker_sheet_30Pal    // Thêm mới ở đây
+    // ... (các sheetPal từ 0 đến 29) ...
+    joker_gfx30Pal    // Tên biến bảng màu
 };
+
+// 3. Hàm lấy dữ liệu đồ họa (giữ nguyên logic)
+bool get_modded_joker_gfx(int joker_id, const unsigned int** out_tiles, const unsigned short** out_pal) {
+    if (joker_id >= MODDED_JOKER_START_ID) {
+        int local_idx = joker_id - MODDED_JOKER_START_ID;
+        int sheet_idx = local_idx / NUM_JOKERS_PER_SPRITESHEET;
+        if (sheet_idx < (sizeof(modded_joker_tiles)/sizeof(modded_joker_tiles[0]))) {
+            *out_tiles = modded_joker_tiles[sheet_idx];
+            *out_pal = modded_joker_pals[sheet_idx];
+            return true;
+        }
+    }
+    return false;
+}

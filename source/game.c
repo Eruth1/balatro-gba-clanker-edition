@@ -5834,6 +5834,54 @@ void handle_joker_30_skills() {
     u16 keys_held = key_held(0xFFFF);
     u16 keys_hit = key_hit(0xFFFF);
 
+    // Kỹ năng Lucky Coin (ID 160)
+    if ((keys_held & KEY_B) && (keys_hit & KEY_A)) {
+        if (has_joker_id(160)) {
+            if (rand() % 2 == 0) {
+                // Thành công
+                modded_shared_joker_effect.x_mult = 4;
+                // Nếu SFX_CASH_REGISTER lỗi, hãy thử dùng SFX_SHOP_BUY hoặc số ID cụ thể
+                play_sfx(15, MM_BASE_PITCH_RATE, 255); 
+            } else {
+                remove_joker_by_id(160);
+                // Dùng SFX_CARD_DESELECT vì SFX_CARD_DESTRUCTION không có
+                play_sfx(SFX_CARD_DESELECT, MM_BASE_PITCH_RATE, 255);
+            }
+        }
+    }
+
+    // Kỹ năng Silence Joker (ID 161)
+    if ((keys_hit & KEY_B) && (keys_hit & KEY_A)) {
+        if (has_joker_id(161)) {
+            if (silence_mult > 0 || silence_chips > 0) {
+                modded_shared_joker_effect.x_mult = 10;
+                silence_mult = 0; 
+                silence_chips = 0;
+                silence_discards = 0; 
+                silence_hands = 0;
+                // SFX_HEAL cũng có thể không tồn tại, hãy dùng một SFX có sẵn
+                play_sfx(SFX_CHIPS_WIN, MM_BASE_PITCH_RATE, 255);
+            }
+        }
+    }
+}
+
+    // Kỹ năng Silence Joker (ID 161)
+    if ((keys_hit & KEY_B) && (keys_hit & KEY_A)) {
+        if (has_joker_id(161)) {
+            if (silence_mult > 0 || silence_chips > 0) {
+                modded_shared_joker_effect.x_mult = 10;
+                silence_mult = 0; 
+                silence_chips = 0;
+                silence_discards = 0; 
+                silence_hands = 0;
+                // SFX_HEAL cũng có thể không tồn tại, hãy dùng một SFX có sẵn
+                play_sfx(SFX_CHIPS_WIN, MM_BASE_PITCH_RATE, 255);
+            }
+        }
+    }
+}
+
     // Kỹ năng Lucky Coin (ID 160): Giữ B + Nhấn A
     if ((keys_held & KEY_B) && (keys_hit & KEY_A)) {
         if (has_joker_id(160)) {
@@ -5857,6 +5905,36 @@ void handle_joker_30_skills() {
                 silence_discards = 0; silence_hands = 0;
                 play_sfx(SFX_HEAL, MM_BASE_PITCH_RATE, 255);
             }
+        }
+    }
+}// Khai báo các biến từ modded_joker_effects.c
+extern int silence_mult;
+extern int silence_chips;
+extern int silence_discards;
+extern int silence_hands;
+
+// Khai báo cấu trúc hiệu ứng mod
+struct JokerEffect; // Forward declaration
+typedef struct JokerEffect JokerEffect;
+typedef uint32_t u32;
+extern JokerEffect modded_shared_joker_effect;
+
+// Khai báo các hàm hỗ trợ từ joker.c hoặc các file khác
+extern bool has_joker_id(int id);
+extern void remove_joker_by_id(int id);
+bool has_joker_id(int id) {
+    for (int i = 0; i < num_active_jokers; i++) {
+        if (active_jokers[i].id == id) return true;
+    }
+    return false;
+}
+
+void remove_joker_by_id(int id) {
+    for (int i = 0; i < num_active_jokers; i++) {
+        if (active_jokers[i].id == id) {
+            // Logic xóa joker khỏi danh sách active_jokers của bạn
+            // Ví dụ: list_remove_at(&active_jokers_list, i);
+            break;
         }
     }
 }
